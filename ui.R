@@ -1,10 +1,16 @@
+packageList = c('ggplot2', 'shiny', 'plyr', 'reshape', 'resahpe2', 'ggvis')
+for (i in 1:length(packageList)) {
+  if(! is.element(packageList[i],installed.packages()[,1])) {
+    install.packages(packageList[i])
+  }
+}
+
 library(ggplot2)
 library(shiny)
 library(plyr)
 library(reshape)
 library(reshape2)
 library(ggvis)
-library(plotly)
 
 shinyUI(navbarPage("World Data",
                    tabPanel("Plot",
