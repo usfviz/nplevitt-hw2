@@ -137,16 +137,16 @@ server <- function(input, output, session) {
                  axis = list(stroke = "white"),
                  labels = list(fontSize = 0))) %>% 
       add_tooltip(function(data){
-        paste0("Country: <t><b>", as.character(data$country), "</b><br>",
-               "Region: <b>", as.character(data$region), "</b><br>",
-               "Population: <b>", prettyNum(data$"population", big.mark=",", scientific=FALSE), "</b><br>",
-               "Fertility Rate: <b>", as.character(round(data$fertility, 2)), "</b>")
+        paste0("Country: <b>", data$country, "</b><br>",
+               "Region: <b>", data$region, "</b><br>",
+               "Population: <b>", prettyNum(data$population, mode='integer',big.mark=",", big.interval=3, scientific=FALSE), "</b><br>",
+               "Fertility Rate: <b>", data$fertility, "</b>")
       }, "click") %>% 
       add_tooltip(function(data){
-        paste0("Country: <t><b>", as.character(data$country), "</b><br>")
+        paste0("Country: <t><b>", as.character(data$country), "</b>")
       }, "hover") %>% 
       set_options(width = 1000, height = 600, renderer = "svg") %>% 
-      layer_text(text := ~country, data = subset(plot_df, country %in% country_list))
+      layer_text(text := ~country, data = subset(plot_df, country %in% country_list), fontSize=105)
   })
   
   plot %>% 
