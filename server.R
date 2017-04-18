@@ -134,6 +134,12 @@ server <- function(input, output, session) {
     xlab = gsub('_', ' ', names(choices[choices==input$xaxis]))
     ylab = gsub('_', ' ', names(choices[choices==input$yaxis]))
     
+    if(input$yaxis == 'population') {
+      y_push <- 100
+    } else{
+      y_push <- 50
+    }
+    
     plot_df <- subset(plot_df, year==yr)
 
     plot_df %>% 
@@ -148,7 +154,7 @@ server <- function(input, output, session) {
       scale_numeric("x", domain = axis_lims[names(axis_lims) == input$xaxis][[1]], nice = FALSE) %>%
       scale_numeric("y", domain = axis_lims[names(axis_lims) == input$yaxis][[1]], nice = FALSE) %>%
       add_axis("x", title = xlab, title_offset = 50) %>%
-      add_axis("y", title = ylab, title_offset = 50) %>%
+      add_axis("y", title = ylab, title_offset = y_push) %>%
       add_axis("x", orient = "top", ticks = 0, title_offset = 50,
                title = paste(xlab, "vs", ylab, "In", yr),
                properties = axis_props(
