@@ -99,7 +99,13 @@ server <- function(input, output, session) {
     if(!is.null(input$regions)) {
       plot_df <- subset(plot_df, region %in% input$regions)
     }
-    plot_df
+    if(!is.null(input$countries)) {
+      plot_df <- subset(plot_df, country %in% input$countries)
+    }
+    keep_cols <- c('country', 'year', 'population', 'fertility', 'life')
+    show_df <- plot_df[,names(plot_df) %in% keep_cols]
+    names(show_df) <- c('Country', 'Year', 'Population', 'Fertility Rate (Births per Woman)', 'Life Expectancy at Birth')
+    show_df
   })
   
   plot <- reactive({
@@ -146,7 +152,7 @@ server <- function(input, output, session) {
         paste0("Country: <t><b>", as.character(data$country), "</b>")
       }, "hover") %>% 
       set_options(width = 1000, height = 600, renderer = "svg") %>% 
-      layer_text(text := ~country, data = subset(plot_df, country %in% country_list), fontSize=105)
+      layer_text(text := ~country, data = subset(plot_df, country %in% country_list))
   })
   
   plot %>% 

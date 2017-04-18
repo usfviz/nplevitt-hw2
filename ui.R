@@ -40,7 +40,9 @@ shinyUI(navbarPage("World Data",
                             )
                    ),
                    tabPanel("Data",
-                              mainPanel(
-                                dataTableOutput('df')
-                              )
+                            sidebarLayout(
+                              sidebarPanel(h3("Selected Data")),
+                              mainPanel(dataTableOutput('df'))
+                            )
+                              
                             )))
