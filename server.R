@@ -122,23 +122,35 @@ server <- function(input, output, session) {
     } else {
       country_list <- input$countries
     }
+  
+    axis_lims <- list(life = c(10, 90), fertility=c(0,9), population= c(0, 1500000000))
     
+    xmin = axis_lims
+    xmax = ceiling(max(full_df[,names(full_df)==input$xaxis]))
+    ymin = floor(min(full_df[,names(full_df)==input$yaxis]))
+    ymax = ceiling(max(full_df[,names(full_df)==input$yaxis]))
+    
+    choices <- list(Life_Expectancy='life', Fertility_Rate='fertility', Population='population')
+    xlab = gsub('_', ' ', names(choices[choices==input$xaxis]))
+    ylab = gsub('_', ' ', names(choices[choices==input$yaxis]))
+    
+    plot_df <- subset(plot_df, year==yr)
+
     plot_df %>% 
-      subset(year == yr) %>% 
-      subset(!is.na(fertility)) %>% 
-      subset(!is.na(life)) %>% 
-      ggvis(x = ~life, y = ~fertility, fill = ~region,
+      subset(!is.na(plot_df[,names(plot_df)==input$xaxis])) %>% 
+      subset(!is.na(plot_df[,names(plot_df)==input$yaxis])) %>%
+      ggvis(prop("x",as.name(input$xaxis)), prop("y",as.name(input$yaxis)), fill = ~region,
             fillOpacity := 0.5, fillOpacity.hover := 1,
             stroke := NA, stroke.hover = ~region, strokeWidth := 4, strokeOpacity := 0.7) %>% 
       scale_numeric("size", range = c(10, input$popSize), nice = FALSE) %>%
-      layer_points(size = ~population, key := ~country) %>%
+      layer_points(prop("size",as.name(input$plotscale)), key := ~country) %>%
       ggvis::hide_legend('size') %>%
-      scale_numeric("x", domain = c(10, 90), nice = FALSE) %>%
-      scale_numeric("y", domain = c(0, 9), nice = FALSE) %>%
-      add_axis("x", title = "Life expectancy", title_offset = 50) %>%
-      add_axis("y", title = "Fertility rate", title_offset = 50) %>%
+      scale_numeric("x", domain = axis_lims[names(axis_lims) == input$xaxis][[1]], nice = FALSE) %>%
+      scale_numeric("y", domain = axis_lims[names(axis_lims) == input$yaxis][[1]], nice = FALSE) %>%
+      add_axis("x", title = xlab, title_offset = 50) %>%
+      add_axis("y", title = ylab, title_offset = 50) %>%
       add_axis("x", orient = "top", ticks = 0, title_offset = 50,
-               title = paste("Life Expectancy vs Fertility Rate In", yr),
+               title = paste(xlab, "vs", ylab, "In", yr),
                properties = axis_props(
                  axis = list(stroke = "white"),
                  labels = list(fontSize = 0))) %>% 
@@ -157,7 +169,6 @@ server <- function(input, output, session) {
   
   plot %>% 
     bind_shiny('plot', 'plot_stuff')
-  
   
   
 }

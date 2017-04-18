@@ -16,9 +16,15 @@ shinyUI(navbarPage("World Data",
                    tabPanel("Plot",
                             sidebarLayout(
                               sidebarPanel(
+                                selectInput('xaxis', 'Select X-Axis Variable', 
+                                            choices = list(Life_Expectancy='life', Fertility_Rate='fertility', Population='population')),
+                                selectInput('yaxis', 'Select Y-Axis Variable', 
+                                            choices = list(Fertility_Rate='fertility', Life_Expectancy='life', Population='population')),
+                                selectInput('plotscale', 'Select Variable to Scale Size By', 
+                                            choices = list(Population='population', Fertility_Rate='fertility', Life_Expectancy='life')),
                                 uiOutput('region'),
                                 uiOutput('country'),
-                                sliderInput('popSize', 'Scale Population',
+                                sliderInput('popSize', 'Scale Magnitude',
                                             min = 100, max = 1000, 
                                             value = 500, step = 100, ticks = F),
                                 h5("Hover over a point to see the country name; click for more information.",align='center')
@@ -41,7 +47,7 @@ shinyUI(navbarPage("World Data",
                    ),
                    tabPanel("Data",
                             sidebarLayout(
-                              sidebarPanel(h3("Selected Data")),
+                              sidebarPanel(h3("Selected Data"), textOutput('tst')),
                               mainPanel(dataTableOutput('df'))
                             )
                               
